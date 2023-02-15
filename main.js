@@ -13,7 +13,7 @@ let champNames = [];
 let spells = [];
 
 const game = {
-  timerGuest: 3,
+  timerGuest: 30,
   currentSpell: {},
   score: 0,
   total: 0,

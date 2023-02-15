@@ -1,7 +1,7 @@
 const ALL_CHAMP_REQUEST =
   "https://ddragon.leagueoflegends.com/cdn/13.3.1/data/en_US/champion.json";
 const BASE_CHAMP_REQUEST =
-  "http://ddragon.leagueoflegends.com/cdn/13.3.1/data/en_US/champion/";
+  "https://ddragon.leagueoflegends.com/cdn/13.3.1/data/en_US/champion/";
 
 const BASE_SPELL_IMAGE_REQUEST =
   "https://ddragon.leagueoflegends.com/cdn/13.3.1/img/spell/";
