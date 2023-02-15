@@ -107,6 +107,7 @@ function reset() {
   timerElm.innerText = `Press enter to start`;
   imgElm.src =
     "https://static1.millenium.org/article_old/images/contenu/actus/LOL/Cheeky_Poro_Emote.png";
+  inputElm.focus();
 }
 
 function createInterval() {
@@ -133,11 +134,12 @@ inputElm.addEventListener("keyup", function (event) {
         game.currentSpell.name.toLocaleLowerCase() &&
       !game.isEnd
     ) {
-      inputElm.value = "";
       game.score += 1;
       game.total += 1;
-      next();
     }
+    inputElm.value = "";
+    next();
+    inputElm.focus();
   }
 });
 
