@@ -57,13 +57,11 @@ async function getSpells() {
 
 function next() {
   const randomSpell = spells[random(0, spells.length - 1)];
-  console.log(randomSpell.src);
   imgElm.src = randomSpell.src;
-
   game.currentSpell = randomSpell;
 }
 
-async function main() {
+async function init() {
   if (!localStorage.getItem("champNames")) {
     await getChampNames();
   } else {
@@ -87,37 +85,49 @@ async function main() {
   inputElm.appendChild(datalistElm);
   inputElm.setAttribute("list", "champ-names");
 
-  next();
+  reset();
+}
+
+function end() {
+  game.isEnd = true;
+  timerElm.innerText = "End";
+  clearInterval(game.timer);
+  inputElm.disabled = true;
+  reset();
+}
+
+function reset() {
+  game.timer = null;
+  game.time = 0;
+  game.score = 0;
+  game.total = 0;
+  game.isEnd = false;
+  inputElm.disabled = false;
+  inputElm.value = "";
+  timerElm.innerText = `Press enter to start`;
+  imgElm.src =
+    "https://static1.millenium.org/article_old/images/contenu/actus/LOL/Cheeky_Poro_Emote.png";
 }
 
 function createInterval() {
-  timerElm.innerText = `${game.timerGuest - game.time} secondes`;
-  scoreElm.innerText = `${game.score}/${game.total}`;
+  timerElm.innerText = `${game.timerGuest}`;
   game.timer = setInterval(() => {
     game.time += 1;
-    console.log(game.time);
-    timerElm.innerText = `${game.timerGuest - game.time} secondes`;
-    scoreElm.innerText = `${game.score} found`;
+    timerElm.innerText = `${game.timerGuest - game.time}`;
     if (game.time === game.timerGuest) {
-      clearInterval(game.timer);
-      game.isEnd = true;
-      timerElm.innerText = "/";
+      alert(game.score);
+      end();
     }
   }, 1000);
 }
-
-//detect enter key on inputElm
-inputElm.addEventListener("onchange", function (event) {
-  console.log(inputElm.value);
-});
 
 inputElm.addEventListener("keyup", function (event) {
   if (event.keyCode === 13) {
     if (game.timer === null) {
       createInterval();
+      next();
       return;
     }
-    event.preventDefault();
     if (
       inputElm.value.toLocaleLowerCase() ===
         game.currentSpell.name.toLocaleLowerCase() &&
@@ -132,6 +142,6 @@ inputElm.addEventListener("keyup", function (event) {
 });
 
 timerElm.innerText = `Press enter to start`;
-window.onload = function init() {
-  main();
+window.onload = () => {
+  init();
 };
