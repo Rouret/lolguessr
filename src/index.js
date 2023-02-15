@@ -1,6 +1,13 @@
+import {
+  getChampNamesFromApi,
+  getChampNamesFromLocalStorage, getChampSpellsFromLocalStorage, getSpellsNameAndImageUrlFromApi,
+  isChampNamesInLocalStorage, isChampSpellsInLocalStorage,
+  random,
+  setChampNamesToLocalStorage, setSpellsToLocalStorage
+} from "./utils";
+
 const imgElm = document.getElementById("spell-image");
 const inputElm = document.getElementById("spell-name");
-const scoreElm = document.getElementById("score");
 const timerElm = document.getElementById("time");
 const welcomeBtn = document.getElementById("welcome-btn");
 const main = document.getElementById("game");
@@ -8,6 +15,7 @@ const welcome = document.getElementById("welcome");
 const recap = document.getElementById("recap");
 const result = document.getElementById("result");
 const recapBtn = document.getElementById("recap-btn");
+
 
 let champNames = [];
 let spells = [];
@@ -44,8 +52,7 @@ async function init() {
   }
   if (!isChampSpellsInLocalStorage()) {
     setIsLoading(true);
-    spells = await getSpellsNameAndImageUrlFromApi(champNames);
-    console.log(spells);
+    spells = await getSpellsNameAndImageUrlFromApi(champNames,welcomeBtn);
     setSpellsToLocalStorage(spells);
   } else {
     spells = getChampSpellsFromLocalStorage();
@@ -196,6 +203,29 @@ inputElm.addEventListener("keyup", function (event) {
     inputElm.focus();
   }
 });
+
+if (isChampNamesInLocalStorage() && isChampSpellsInLocalStorage()) {
+  main.style.display = "flex";
+  recap.style.display = "none";
+  welcome.style.display = "none";
+}
+
+welcomeBtn.addEventListener("click", () => {
+  if (game.isLoading) return;
+  main.style.display = "flex";
+  recap.style.display = "none";
+  welcome.style.display = "none";
+  inputElm.focus();
+});
+
+recapBtn.addEventListener("click", () => {
+  if (game.isLoading) return;
+  main.style.display = "flex";
+  recap.style.display = "none";
+  welcome.style.display = "none";
+  inputElm.focus();
+});
+
 
 init();
 timerElm.innerText = `Press enter to start`;
