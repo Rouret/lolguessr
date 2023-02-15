@@ -11,6 +11,30 @@
 
 <body>
     <style>
+        @font-face {
+            font-family: "Beaufort for LOL";
+            src: url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Regular.eot?#iefix);
+            src: url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Regular.eot?#iefix) format("eot"), url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Regular.woff) format("woff"), url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Regular.ttf) format("truetype"), url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Regular.svg#) format("svg");
+            font-weight: 1 699
+        }
+
+        @font-face {
+            font-family: "Beaufort for LOL";
+            src: url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Bold.eot?#iefix);
+            src: url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Bold.eot?#iefix) format("eot"), url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Bold.woff) format("woff"), url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Bold.ttf) format("truetype"), url(https://lolstatic-a.akamaihd.net/awesomefonts/1.0.0/Fonts/BeaufortforLOL-Bold.svg#) format("svg");
+            font-weight: 700 999
+        }
+
+        body {
+            color: #c4b998;
+            font-family: Beaufort for LOL, serif;
+            background: rgb(10, 25, 36);
+            background: -moz-radial-gradient(circle, rgba(10, 25, 36, 1) 17%, rgba(0, 0, 0, 1) 48%);
+            background: -webkit-radial-gradient(circle, rgba(10, 25, 36, 1) 17%, rgba(0, 0, 0, 1) 48%);
+            background: radial-gradient(circle, rgba(10, 25, 36, 1) 17%, rgba(0, 0, 0, 1) 48%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0a1924", endColorstr="#000000", GradientType=1);
+        }
+
         #main {
             display: flex;
             flex-direction: column;
@@ -20,10 +44,15 @@
         }
 
         #spell-image {
-            width: 100px;
-            height: 100px;
-            background-color: red;
+            width: 150px;
+            height: 150px;
             margin-bottom: 20px;
+            border: #776034 3px solid;
+        }
+
+        #spell-name {
+            background: transparent;
+            border: 2px solid #7e633b;
         }
     </style>
     <div id="main">

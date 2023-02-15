@@ -15,7 +15,7 @@ let champNames = [];
 let spells = [];
 
 const game = {
-  timerGuest: 10,
+  timerGuest: 20,
   currentSpell: {},
   score: 0,
   total: 0,
@@ -76,25 +76,45 @@ async function main() {
     spells = JSON.parse(localStorage.getItem("champSpells"));
   }
 
+  //create a datalist
+  const datalistElm = document.createElement("datalist");
+  datalistElm.id = "champ-names";
+  for (let i = 0; i < champNames.length; i++) {
+    const optionElm = document.createElement("option");
+    optionElm.value = champNames[i].toLocaleLowerCase();
+    datalistElm.appendChild(optionElm);
+  }
+  inputElm.appendChild(datalistElm);
+  inputElm.setAttribute("list", "champ-names");
+
   next();
 }
 
+function createInterval() {
+  timerElm.innerText = `${game.timerGuest - game.time} secondes`;
+  scoreElm.innerText = `${game.score}/${game.total}`;
+  game.timer = setInterval(() => {
+    game.time += 1;
+    console.log(game.time);
+    timerElm.innerText = `${game.timerGuest - game.time} secondes`;
+    scoreElm.innerText = `${game.score} found`;
+    if (game.time === game.timerGuest) {
+      clearInterval(game.timer);
+      game.isEnd = true;
+      timerElm.innerText = "/";
+    }
+  }, 1000);
+}
+
 //detect enter key on inputElm
+inputElm.addEventListener("onchange", function (event) {
+  console.log(inputElm.value);
+});
+
 inputElm.addEventListener("keyup", function (event) {
   if (event.keyCode === 13) {
     if (game.timer === null) {
-      console.log("timer started");
-      game.timer = setInterval(() => {
-        game.time += 1;
-        console.log(game.time);
-        timerElm.innerText = game.time;
-        scoreElm.innerText = `${game.score}/${game.total}`;
-        if (game.time === game.timerGuest) {
-          clearInterval(game.timer);
-          game.isEnd = true;
-          timerElm.innerText = "/";
-        }
-      }, 1000);
+      createInterval();
       return;
     }
     event.preventDefault();
@@ -111,4 +131,7 @@ inputElm.addEventListener("keyup", function (event) {
   }
 });
 
-main();
+timerElm.innerText = `Press enter to start`;
+window.onload = function init() {
+  main();
+};
