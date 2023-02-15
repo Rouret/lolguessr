@@ -10,6 +10,7 @@ const imgElm = document.getElementById("spell-image");
 const inputElm = document.getElementById("spell-name");
 const scoreElm = document.getElementById("score");
 const timerElm = document.getElementById("time");
+const welcomeBtn = document.getElementById("welcome-btn");
 
 let champNames = [];
 let spells = [];
@@ -22,6 +23,7 @@ const game = {
   time: 0,
   timer: null,
   isEnd: false,
+  isLoading: false,
 };
 
 async function getSpellNameAndImageUrl(champName) {
@@ -63,12 +65,14 @@ function next() {
 
 async function init() {
   if (!localStorage.getItem("champNames")) {
+    setIsLoading(true);
     await getChampNames();
   } else {
     champNames = localStorage.getItem("champNames").split(",");
   }
 
   if (!localStorage.getItem("champSpells")) {
+    setIsLoading(true);
     await getSpells();
   } else {
     spells = JSON.parse(localStorage.getItem("champSpells"));
@@ -84,8 +88,17 @@ async function init() {
   }
   inputElm.appendChild(datalistElm);
   inputElm.setAttribute("list", "champ-names");
-
+  setIsLoading(false);
   reset();
+}
+
+function setIsLoading(bool) {
+  if (bool) {
+    welcomeBtn.innerHTML = "Loading...";
+  } else {
+    welcomeBtn.innerHTML = "Ok";
+  }
+  game.isLoading = bool;
 }
 
 function end() {
