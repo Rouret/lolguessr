@@ -144,6 +144,26 @@
             box-shadow: none;
             color: #cdbe9130;
         }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wrong {
+            color: #B20000;
+            text-decoration: line-through;
+        }
+
+        .right {
+            color: green;
+        }
+
+        .im * {
+            margin: 6px;
+        }
     </style>
     <div id="game">
         <span id="time">0</span>
@@ -166,7 +186,9 @@
     </div>
     <div id="recap" class="popup">
         <div class="popup-content">
-            <div class="popup-title">recap</div>
+            <div class="popup-title">Information of the run</div>
+            <div id="result"></div>
+            <button id="recap-btn">Try again</button>
         </div>
 
     </div>

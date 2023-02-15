@@ -3,12 +3,17 @@ const inputElm = document.getElementById("spell-name");
 const scoreElm = document.getElementById("score");
 const timerElm = document.getElementById("time");
 const welcomeBtn = document.getElementById("welcome-btn");
+const main = document.getElementById("game");
+const welcome = document.getElementById("welcome");
+const recap = document.getElementById("recap");
+const result = document.getElementById("result");
+const recapBtn = document.getElementById("recap-btn");
 
 let champNames = [];
 let spells = [];
 
 const game = {
-  timerGuest: 20,
+  timerGuest: 5,
   currentSpell: {},
   score: 0,
   total: 0,
@@ -16,12 +21,17 @@ const game = {
   timer: null,
   isEnd: false,
   isLoading: false,
+  temp: 0,
+  recap: {
+    history: [],
+  },
 };
 
 function next() {
   const randomSpell = spells[random(0, spells.length - 1)];
   imgElm.src = randomSpell.src;
   game.currentSpell = randomSpell;
+  game.temp = new Date().getTime();
 }
 
 async function init() {
@@ -52,7 +62,6 @@ async function init() {
   inputElm.appendChild(datalistElm);
   inputElm.setAttribute("list", "champ-names");
   setIsLoading(false);
-  reset();
 }
 
 function setIsLoading(bool) {
@@ -69,7 +78,65 @@ function end() {
   timerElm.innerText = "End";
   clearInterval(game.timer);
   inputElm.disabled = true;
+  game.recap.score = game.score;
+  displayRecap();
   reset();
+}
+
+function displayRecap() {
+  main.style.display = "none";
+  recap.style.display = "flex";
+  welcome.style.display = "none";
+  result.innerHTML = "";
+
+  //display score
+  const scoreElm = document.createElement("div");
+  scoreElm.classList.add("popup-text");
+  scoreElm.classList.add("row");
+  scoreElm.classList.add("im-2");
+  scoreElm.innerText = `Score: ${game.score}`;
+  result.appendChild(scoreElm);
+
+  for (let i = 0; i < game.recap.history.length; i++) {
+    const currentHistory = game.recap.history[i];
+    const historyElm = document.createElement("div");
+    historyElm.classList.add("popup-text");
+    historyElm.classList.add("row");
+    historyElm.classList.add("im");
+
+    const spellImageElm = document.createElement("img");
+    spellImageElm.classList.add("spell-image");
+    spellImageElm.src = currentHistory.spellImage;
+    historyElm.appendChild(spellImageElm);
+
+    const inputElm = document.createElement("div");
+    inputElm.classList.add("input");
+    if (currentHistory.isCorrect) {
+      inputElm.classList.add("right");
+    } else {
+      inputElm.classList.add("wrong");
+    }
+    if (currentHistory.input === "") {
+      inputElm.innerText = "empty";
+    } else {
+      inputElm.innerText = currentHistory.input;
+    }
+
+    historyElm.appendChild(inputElm);
+
+    if (!currentHistory.isCorrect) {
+      const champNameElm = document.createElement("div");
+      champNameElm.classList.add("right");
+      champNameElm.innerText = currentHistory.champ;
+      historyElm.appendChild(champNameElm);
+    }
+
+    const delayElm = document.createElement("div");
+    delayElm.innerText = `${currentHistory.delay} ms `;
+    historyElm.appendChild(delayElm);
+
+    result.appendChild(historyElm);
+  }
 }
 
 function reset() {
@@ -78,6 +145,9 @@ function reset() {
   game.score = 0;
   game.total = 0;
   game.isEnd = false;
+  game.recap = {
+    history: [],
+  };
   inputElm.disabled = false;
   inputElm.value = "";
   timerElm.innerText = `Press enter to start`;
@@ -92,7 +162,6 @@ function createInterval() {
     game.time += 1;
     timerElm.innerText = `${game.timerGuest - game.time}`;
     if (game.time === game.timerGuest) {
-      alert(game.score);
       end();
     }
   }, 1000);
@@ -102,6 +171,7 @@ inputElm.addEventListener("keyup", function (event) {
   if (event.keyCode === 13) {
     if (game.timer === null) {
       createInterval();
+      inputElm.value = "";
       next();
       return;
     }
@@ -113,13 +183,21 @@ inputElm.addEventListener("keyup", function (event) {
       game.score += 1;
       game.total += 1;
     }
+    game.recap.history.push({
+      champ: game.currentSpell.name,
+      spellImage: game.currentSpell.src,
+      input: inputElm.value,
+      isCorrect: inputElm.value === game.currentSpell.name,
+      delay: new Date().getTime() - game.temp,
+    });
     inputElm.value = "";
     next();
     inputElm.focus();
   }
 });
 
+init();
 timerElm.innerText = `Press enter to start`;
 window.onload = () => {
-  init();
+  reset();
 };
