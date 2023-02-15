@@ -175,9 +175,10 @@ inputElm.addEventListener("keyup", function (event) {
       next();
       return;
     }
+    const isEqual = inputElm.value.toLocaleLowerCase() ===
+    game.currentSpell.name.toLocaleLowerCase()
     if (
-      inputElm.value.toLocaleLowerCase() ===
-        game.currentSpell.name.toLocaleLowerCase() &&
+      isEqual &&
       !game.isEnd
     ) {
       game.score += 1;
@@ -187,7 +188,7 @@ inputElm.addEventListener("keyup", function (event) {
       champ: game.currentSpell.name,
       spellImage: game.currentSpell.src,
       input: inputElm.value,
-      isCorrect: inputElm.value === game.currentSpell.name,
+      isCorrect: isEqual,
       delay: new Date().getTime() - game.temp,
     });
     inputElm.value = "";
