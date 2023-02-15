@@ -73,6 +73,7 @@
         }
 
         .popup {
+            overflow: auto;
             position: absolute;
             top: 0;
             left: 0;
@@ -92,10 +93,13 @@
             padding: 20px;
             /* center */
             display: flex;
+            max-height: 80%;
+        }
+
+        .center {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-
         }
 
         .popup-title {
@@ -164,6 +168,12 @@
         .im * {
             margin: 6px;
         }
+
+        #recap-content {
+            position: relative;
+            top: 0px;
+            left: 0px;
+        }
     </style>
     <div id="game">
         <span id="time">0</span>
@@ -173,7 +183,7 @@
     </div>
 
     <div id="welcome" class="popup">
-        <div class="popup-content">
+        <div class="popup-content center">
             <div class="popup-title">Welcome</div>
             <div class="popup-text">The goal of the game is to find the champion owner of Leagueof Legends skills within
                 30 seconds.</div>
@@ -186,9 +196,11 @@
     </div>
     <div id="recap" class="popup">
         <div class="popup-content">
-            <div class="popup-title">Information of the run</div>
-            <div id="result"></div>
-            <button id="recap-btn">Try again</button>
+            <div class="center">
+                <div class="popup-title">Information of the run</div>
+                <div id="result"></div>
+                <button id="recap-btn">Try again</button>
+            </div>
         </div>
 
     </div>
