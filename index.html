@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+</head>
+
+<body>
+    <style>
+        #main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #spell-image {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            margin-bottom: 20px;
+        }
+    </style>
+    <div id="main">
+        <img id="spell-image" src="https://via.placeholder.com/200x200" alt="Spell Image">
+        <span id="score"></span>
+        <input type="search" id="spell-name" placeholder="Spell Name">
+        <span id="time">0</span>
+    </div>
+    <script src='main.js'></script>
+</body>
+
+</html>
