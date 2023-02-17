@@ -1,6 +1,6 @@
 {
   "name": "lolguessr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "The goal of the game is to find the champion owner of Leagueof Legends skills within 30 seconds.",
   "scripts": {

@@ -1,14 +1,15 @@
 const ALL_CHAMP_REQUEST =
-    "https://ddragon.leagueoflegends.com/cdn/13.3.1/data/fr_FR/champion.json";
+  "https://ddragon.leagueoflegends.com/cdn/13.3.1/data/fr_FR/champion.json";
 const BASE_CHAMP_REQUEST =
-    "https://ddragon.leagueoflegends.com/cdn/13.3.1/data/fr_FR/champion/";
+  "https://ddragon.leagueoflegends.com/cdn/13.3.1/data/fr_FR/champion/";
 
 const BASE_SPELL_IMAGE_REQUEST =
-    "https://ddragon.leagueoflegends.com/cdn/13.3.1/img/spell/";
+  "https://ddragon.leagueoflegends.com/cdn/13.3.1/img/spell/";
 
 const localStorageNames = {
   champNames: "champNames",
   champSpells: "champSpells",
+  lolguessrVersion: "version",
 };
 export function random(min, max) {
   min = Math.ceil(min);
@@ -21,20 +22,41 @@ export async function getChampNamesFromApi() {
   const res = await response.json();
   return Object.keys(res.data);
 }
-export async function getSpellsNameAndImageUrlFromApi(champNames,buttonLoading) {
-  let temp = [];
-  for (let i = 0; i < champNames.length; i++) {
-    const response = await fetch(BASE_CHAMP_REQUEST + champNames[i] + ".json");
+
+async function getSpellsUrlFromUrl(champName) {
+  return new Promise(async (resolve, reject) => {
+    let spellsOfChampName = [];
+    const response = await fetch(BASE_CHAMP_REQUEST + champName + ".json");
     const res = await response.json();
 
-    const spellImageUrl =
-      BASE_SPELL_IMAGE_REQUEST + res.data[champNames[i]].spells[0].image.full;
+    for (const element of res.data[champName].spells) {
+      const spellImageUrl = BASE_SPELL_IMAGE_REQUEST + element.image.full;
 
+      spellsOfChampName.push({ src: spellImageUrl, name: champName });
+    }
+
+    resolve(spellsOfChampName);
+  });
+}
+
+export async function getSpellsNameAndImageUrlFromApi(
+  champNames,
+  buttonLoading
+) {
+  let promises = [];
+
+  for (let i = 0; i < champNames.length; i++) {
+    promises.push(getSpellsUrlFromUrl(champNames[i]));
     buttonLoading.innerHTML = `Loading ... (${i}/${champNames.length})`;
-
-    temp.push({ src: spellImageUrl, name: champNames[i] });
   }
-  return temp;
+
+  const temp = await Promise.all(promises);
+  let result = [];
+  for (const element of temp) {
+    result = result.concat(element);
+  }
+
+  return result;
 }
 
 export function setSpellsToLocalStorage(spells) {
@@ -43,6 +65,10 @@ export function setSpellsToLocalStorage(spells) {
 
 export function setChampNamesToLocalStorage(champNames) {
   localStorage.setItem(localStorageNames.champNames, champNames.join(","));
+}
+
+export function setLolguessrVersionToLocalStorage(version) {
+  localStorage.setItem(localStorageNames.lolguessrVersion, version);
 }
 
 export function getChampNamesFromLocalStorage() {
@@ -59,4 +85,18 @@ export function isChampNamesInLocalStorage() {
 
 export function isChampSpellsInLocalStorage() {
   return localStorage.getItem(localStorageNames.champSpells) !== null;
+}
+
+export function isLolguessrVersionInLocalStorage(version) {
+  const localStorageVersion = localStorage.getItem(
+    localStorageNames.lolguessrVersion
+  );
+  if (localStorageVersion === null) {
+    setLolguessrVersionToLocalStorage(version);
+    return false;
+  } else if (localStorageVersion !== version) {
+    setLolguessrVersionToLocalStorage(version);
+    return false;
+  }
+  return true;
 }

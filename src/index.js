@@ -1,9 +1,14 @@
 import {
   getChampNamesFromApi,
-  getChampNamesFromLocalStorage, getChampSpellsFromLocalStorage, getSpellsNameAndImageUrlFromApi,
-  isChampNamesInLocalStorage, isChampSpellsInLocalStorage,
+  getChampNamesFromLocalStorage,
+  getChampSpellsFromLocalStorage,
+  getSpellsNameAndImageUrlFromApi,
+  isChampNamesInLocalStorage,
+  isChampSpellsInLocalStorage,
+  isLolguessrVersionInLocalStorage,
   random,
-  setChampNamesToLocalStorage, setSpellsToLocalStorage
+  setChampNamesToLocalStorage,
+  setSpellsToLocalStorage,
 } from "./utils";
 
 const imgElm = document.getElementById("spell-image");
@@ -16,11 +21,11 @@ const recap = document.getElementById("recap");
 const result = document.getElementById("result");
 const recapBtn = document.getElementById("recap-btn");
 
-
 let champNames = [];
 let spells = [];
 
 const game = {
+  version: "1.0.1",
   timerGuest: 30,
   currentSpell: {},
   score: 0,
@@ -43,27 +48,38 @@ function next() {
 }
 
 async function init() {
-  if (!isChampNamesInLocalStorage()) {
+  //Check if the version is the same or not defined
+  if (!isLolguessrVersionInLocalStorage(game.version)) {
+    //if not the same, override the localstorage
     setIsLoading(true);
     champNames = await getChampNamesFromApi();
     setChampNamesToLocalStorage(champNames);
-  } else {
-    champNames = getChampNamesFromLocalStorage();
-  }
-  if (!isChampSpellsInLocalStorage()) {
-    setIsLoading(true);
-    spells = await getSpellsNameAndImageUrlFromApi(champNames,welcomeBtn);
+    spells = await getSpellsNameAndImageUrlFromApi(champNames, welcomeBtn);
     setSpellsToLocalStorage(spells);
   } else {
-    spells = getChampSpellsFromLocalStorage();
+    //get champ names and spells from localstorage or get them from api
+    if (!isChampNamesInLocalStorage()) {
+      setIsLoading(true);
+      champNames = await getChampNamesFromApi();
+      setChampNamesToLocalStorage(champNames);
+    } else {
+      champNames = getChampNamesFromLocalStorage();
+    }
+    if (!isChampSpellsInLocalStorage()) {
+      setIsLoading(true);
+      spells = await getSpellsNameAndImageUrlFromApi(champNames, welcomeBtn);
+      setSpellsToLocalStorage(spells);
+    } else {
+      spells = getChampSpellsFromLocalStorage();
+    }
   }
 
   //create a datalist
   const datalistElm = document.createElement("datalist");
   datalistElm.id = "champ-names";
-  for (let i = 0; i < champNames.length; i++) {
+  for (const element of champNames) {
     const optionElm = document.createElement("option");
-    optionElm.value = champNames[i].toLocaleLowerCase();
+    optionElm.value = element.toLocaleLowerCase();
     datalistElm.appendChild(optionElm);
   }
   inputElm.appendChild(datalistElm);
@@ -104,8 +120,8 @@ function displayRecap() {
   scoreElm.innerText = `Score: ${game.score}`;
   result.appendChild(scoreElm);
 
-  for (let i = 0; i < game.recap.history.length; i++) {
-    const currentHistory = game.recap.history[i];
+  for (const element of game.recap.history) {
+    const currentHistory = element;
     const historyElm = document.createElement("div");
     historyElm.classList.add("popup-text");
     historyElm.classList.add("row");
@@ -182,12 +198,10 @@ inputElm.addEventListener("keyup", function (event) {
       next();
       return;
     }
-    const isEqual = inputElm.value.toLocaleLowerCase() ===
-    game.currentSpell.name.toLocaleLowerCase()
-    if (
-      isEqual &&
-      !game.isEnd
-    ) {
+    const isEqual =
+      inputElm.value.toLocaleLowerCase() ===
+      game.currentSpell.name.toLocaleLowerCase();
+    if (isEqual && !game.isEnd) {
       game.score += 1;
       game.total += 1;
     }
@@ -225,7 +239,6 @@ recapBtn.addEventListener("click", () => {
   welcome.style.display = "none";
   inputElm.focus();
 });
-
 
 init();
 timerElm.innerText = `Press enter to start`;
